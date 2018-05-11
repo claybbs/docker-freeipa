@@ -16,3 +16,5 @@
 - /var/log/session #用户的终端日志记录，可能需要在nfs配置该目录权限为chmod 777 
 
 ## 运行容器的时候，请修改容器的主机名!
+
+### freeipa-server 参考：https://github.com/freeipa/freeipa-container
