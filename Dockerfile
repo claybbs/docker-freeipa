@@ -7,7 +7,7 @@ MAINTAINER Clay Chen
 RUN yum install -y ipa-client perl && yum clean all
 
 # Install sshd server
-RUN yum install -y openssh openssh-server openssh-clients vim zip net-tools nc telnet tar unzip && yum clean all
+RUN yum install -y openssh openssh-server openssh-clients vim zip net-tools nc telnet tar unzip lrzsz && yum clean all 
 
 RUN echo 'root:Leanwork2018' | chpasswd
 
