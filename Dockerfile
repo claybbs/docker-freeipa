@@ -1,35 +1,44 @@
-# Clone from the RHEL 6
-FROM centos:6.7
+# Clone from the CentOS 7
+FROM centos:centos7
 
 MAINTAINER Clay Chen
 
+RUN yum swap -y -- remove fakesystemd systemd-container systemd-container-libs -- install systemd  systemd-libs  && yum clean all
+
+RUN yum install -y  openssh openssh-clients openssh-server vim dbus  net-tools rsyslog lrzsz zip unzip lftp sudo tar mtr && yum clean all
+
 # Install FreeIPA client
-RUN yum install -y ipa-client perl && yum clean all
+RUN yum install -y oddjob oddjob-mkhomedir ipa-client dbus-python perl 'perl(Data::Dumper)' 'perl(Time::HiRes)' && yum clean all
 
-# Install sshd server
-RUN yum install -y openssh openssh-server openssh-clients vim zip net-tools nc telnet tar unzip && yum clean all
 
-RUN echo 'root:Leanwork2018' | chpasswd
+RUN ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+RUN ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa
+RUN ssh-keygen -A
 
-RUN (sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config;\
-     sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 60/' /etc/ssh/sshd_config;\
-     sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 3/' /etc/ssh/sshd_config)
+RUN echo "root:jump" | chpasswd
 
-# user terminater log file
-RUN (mkdir -p /var/log/session/;\
-     chmod 777 /var/log/session)
+ADD dbus.service /etc/systemd/system/dbus.service
+RUN ln -sf dbus.service /etc/systemd/system/messagebus.service
+
+
+ADD systemctl /usr/bin/systemctl
+ADD sshd_config /etc/ssh/sshd_config
+ADD profile /etc/profile
 
 ADD ipa-client-configure-first /usr/sbin/ipa-client-configure-first
 
-ADD profile /etc/profile
+RUN mkdir -p /var/dbus
+RUN chmod -v +x /usr/bin/systemctl /usr/sbin/ipa-client-configure-first
 
-RUN chmod -v +x /usr/sbin/ipa-client-configure-first
+RUN systemctl enable sshd  && rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime 
 
-RUN /sbin/service sshd start && /sbin/service sshd stop
+RUN (mkdir -p /var/log/session/;\
+     chmod 777 /var/log/session)
 
 VOLUME ["/home"]
 VOLUME ["/var/log/session"]
-
-ENTRYPOINT /usr/sbin/ipa-client-configure-first
+VOLUME ["/sys/fs/cgroup"]
+VOLUME ["/run/dbus"]
 
 EXPOSE 22
+ENTRYPOINT /usr/sbin/ipa-client-configure-first

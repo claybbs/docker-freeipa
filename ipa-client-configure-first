@@ -16,8 +16,9 @@
 
 set -e
 
-#/usr/sbin/sshd -D
-service sshd start
+#systemctl start sshd
+
+systemctl start-enabled
 
 function usage () {
 	if [ -n "$1" ] ; then
@@ -30,11 +31,13 @@ function usage () {
 }
 
 function stop_running () {
-	service sssd stop
+	systemctl stop-running
 }
-trap stop_running TERM
-
-rm -rf /var/run/*.pid
+#trap stop_running TERM
+#
+#systemctl stop dbus.service
+#rm -rf /var/run/*.pid
+#rm -f /run/systemctl-lite-running/*
 
 if [ -n "$IPA_PORT_53_UDP_ADDR" ] ; then
 	echo "nameserver $IPA_PORT_53_UDP_ADDR" > /etc/resolv.conf
@@ -51,7 +54,7 @@ if [ -f /etc/ipa/ca.crt ] ; then
 		fi
 	fi
 	echo "System is already FreeIPA-enrolled, starting the services."
-	service sssd start
+	#systemctl start-enabled
 	echo "System is ready."
 else
 	if [ -z "$PASSWORD" ] ; then
@@ -73,9 +76,9 @@ else
 		fi
 	fi
 
-	mkdir -p /etc/ssh
 	/usr/sbin/ipa-client-install $IPA_CLIENT_INSTALL_OPTS $HOSTNAME_OPTS -p admin -w "$PASSWORD" -U --enable-dns-updates < /dev/null
 	cp -f /etc/hostname /etc/hostname.ipa-client
+#	systemctl start-enabled
 	echo "FreeIPA-enrolled."
 fi
 
