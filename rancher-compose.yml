@@ -1,0 +1,26 @@
+volumes:
+  user-home:
+    external: true
+    driver: rancher-nfs
+  user-terminal-log:
+    external: true
+    driver: rancher-nfs
+services:
+  jumper:
+    image: claybbs/centos7-sshd-freeipa-client
+    hostname: freeipa-client.jumper.com
+    environment:
+      PASSWORD: 520@Lwork
+      IPA_CLIENT_INSTALL_OPTS: --mkhomedir  --force-join --domain=freeipa-server.jumper.com  --server=freeipa-server.jumper.com
+    stdin_open: true
+    volumes:
+    - user-home:/home
+    - user-terminal-log:/var/log/session
+    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    - /run/dbus:/run/dbus
+    tty: true
+    ports:
+    - 2014:22/tcp
+    labels:
+      io.rancher.container.pull_image: always
+
