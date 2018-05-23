@@ -17,7 +17,7 @@ services:
     - user-home:/home
     - user-terminal-log:/var/log/session
     - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    - /run/dbus:/run/dbus
+    - /run/dbus:/run/dbus:ro
     tty: true
     ports:
     - 2014:22/tcp
