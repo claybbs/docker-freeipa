@@ -5,7 +5,7 @@ MAINTAINER Clay Chen
 
 RUN yum swap -y -- remove fakesystemd systemd-container systemd-container-libs -- install systemd  systemd-libs  && yum clean all
 
-RUN yum install -y  openssh openssh-clients openssh-server vim dbus  net-tools rsyslog lrzsz zip unzip lftp sudo tar mtr && yum clean all
+RUN yum install -y  openssh openssh-clients openssh-server sshpass vim dbus  net-tools rsyslog lrzsz zip unzip lftp sudo tar mtr && yum clean all
 
 # Install FreeIPA client
 RUN yum install -y oddjob oddjob-mkhomedir ipa-client dbus-python perl 'perl(Data::Dumper)' 'perl(Time::HiRes)' && yum clean all
