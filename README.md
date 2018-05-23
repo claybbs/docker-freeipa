@@ -3,5 +3,5 @@
 - 包含常用工具
 
 ## 注意,下面两个必须挂载:
-- volume:/run/dbus
-- volume:/sys/fs/cgroup
+- volume:/run/dbus:ro
+- volume:/sys/fs/cgroup:ro

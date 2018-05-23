@@ -10,7 +10,7 @@ services:
     image: claybbs/centos7-sshd-freeipa-client
     hostname: freeipa-client.jumper.com
     environment:
-      PASSWORD: 520@Lwork
+      PASSWORD: abc123
       IPA_CLIENT_INSTALL_OPTS: --mkhomedir  --force-join --domain=freeipa-server.jumper.com  --server=freeipa-server.jumper.com
     stdin_open: true
     volumes:
