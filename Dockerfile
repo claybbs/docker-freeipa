@@ -9,7 +9,7 @@ RUN yum install -y ipa-client perl && yum clean all
 # Install sshd server
 RUN yum install -y openssh openssh-server openssh-clients vim zip net-tools nc telnet tar unzip lrzsz && yum clean all 
 
-RUN echo 'root:Leanwork2018' | chpasswd
+RUN echo 'root:abc123' | chpasswd
 
 RUN (sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config;\
      sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 60/' /etc/ssh/sshd_config;\
